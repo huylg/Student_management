@@ -29,7 +29,7 @@ class Helper{
     }
 
     static List<String> columns(){
-        return ['first_name','last_name','date_of_birth','gender','className','other_info','id','is_disable'];
+        return ['first_name','last_name','date_of_birth','gender','class_name','other_info','id','is_disable'];
     }
 
 }
