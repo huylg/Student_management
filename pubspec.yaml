@@ -1,4 +1,4 @@
-name: student_management
+name: student_management 
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -31,6 +31,7 @@ dependencies:
   sqflite: ^1.3.0
   path_provider: ^1.6.24
   material_design_icons_flutter: ^4.0.5755
+  gender_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:
