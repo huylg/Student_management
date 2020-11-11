@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_management/bloc/student_bloc.dart';
 import 'package:student_management/models/student.dart';
+import 'edit_form_screen.dart';
 
 class HomePage extends StatelessWidget {
     final StudentBloc bloc = StudentBloc();
@@ -33,6 +34,16 @@ class HomePage extends StatelessWidget {
         return Scaffold(
                 appBar: AppBar(title: Text(this.title)),
                 body: streamBuild,
+                floatingActionButton: FloatingActionButton(
+
+                        child: Icon(Icons.add),
+                        onPressed: (){
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EditFormScreen()),
+                            );
+                        },
+                ),
         );
     }
 }

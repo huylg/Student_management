@@ -5,6 +5,9 @@ class Student {
      String gender;
      String className;
      String otherInfo;
+
+
+
      int id;
      bool isDisable;
 
