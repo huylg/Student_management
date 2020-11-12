@@ -24,13 +24,36 @@ class HomePage extends StatelessWidget {
                             itemCount: students.length,
                             itemBuilder: (context, index) {
 
+                                final student = students[index];
 
-                                return ListTile(
-                                        title: Text(students[index].firstName + students[index].lastName),
-                                        subtitle: Text(students[index].className),
-                                );
+                                return Dismissible(
+
+                                        key: Key('${student.id}'),
+                                        background: Container(color: Colors.red,),
+
+                                        onDismissed: (direction) => bloc.deleteStudent(student.id),
+
+                                        child: GestureDetector(
+                                                onTap: ()async{
+                                                    final editedStudent = await Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => EditForm(title: 'edit form',student: student.clone(),)),
+                                                    );
+
+                                                    bloc.updateStudent(editedStudent);
+
+                                                },
+                                                child: ListTile(
+                                                               title: Text(students[index].firstName + students[index].lastName),
+                                                               subtitle: Text(students[index].className),
+                                                       ),
+                                        )
+
+
+                                                );
+
                             },
-                    );
+                            );
                 });
 
         return Scaffold(
@@ -42,7 +65,7 @@ class HomePage extends StatelessWidget {
                         onPressed: ()async{
                             final newStudent = await Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => EditForm()),
+                                    MaterialPageRoute(builder: (context) => EditForm(title: 'add form',student: Student.studentDefault(),)),
                             );
 
                             bloc.addStudent(newStudent);

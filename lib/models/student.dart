@@ -1,3 +1,4 @@
+
 class Student {
      String firstName;
      String lastName;
@@ -23,7 +24,19 @@ class Student {
     static Student studentDefault(){
         return Student('','','2000-01-01','male','','',null,false);
     }
-
+    
+    Student clone(){
+        return Student(
+                this.firstName,
+                this.lastName,
+                this.dateOfBirth,
+                this.gender,
+                this.className,
+                this.otherInfo,
+                this.id,
+                this.isDisable,
+        );
+    }
 
     
 }

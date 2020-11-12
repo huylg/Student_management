@@ -5,13 +5,17 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:student_management/models/student.dart';
 
 class EditForm extends StatefulWidget{
+
+    final String title;
+    final Student student;
+
+    EditForm({this.title,this.student});
+
     @override
     _EditFormState createState() => _EditFormState();
 }
 class _EditFormState extends State<EditForm>{
     final _formKey = GlobalKey<FormState>();
-    final student = Student.studentDefault();
-
     @override
     void initState() {
         // TODO: implement initState
@@ -24,10 +28,10 @@ class _EditFormState extends State<EditForm>{
                 key: _formKey,
                 child: Scaffold(
 
-                        appBar: AppBar(title: Text('Form'),actions: [FlatButton(
+                        appBar: AppBar(title: Text(widget.title),actions: [FlatButton(
                                         onPressed: (){
                                             if(_formKey.currentState.validate()){
-                                                Navigator.pop(context, student);
+                                                Navigator.pop(context, widget.student);
                                             }
                                         },
                                         textColor: Colors.white,
@@ -39,44 +43,54 @@ class _EditFormState extends State<EditForm>{
                                         SinglelineTextFormField(
                                                 icon: Icon(Icons.person),
                                                 hintText: 'first name',
-                                                onChange: (text) => student.firstName = text,
+                                                onChange: (text) => widget.student.firstName = text,
                                                 title: 'First Name',
+                                                initialValue: widget.student.firstName,
                                         ),
                                         SinglelineTextFormField(
-                                                icon: Icon(Icons.person),
+
+                                                icon: Icon(Icons.info),
                                                 hintText: 'last name',
-                                                onChange: (text) => student.lastName = text,
+                                                onChange: (text) => widget.student.lastName = text,
                                                 title: 'Last name',
+                                                initialValue: widget.student.lastName,
                                         ),
                                         SinglelineTextFormField(
 
                                                 icon: Icon(Icons.class_),
                                                 hintText: 'class',
-                                                onChange: (text) => student.className = text,
+                                                onChange: (text) => widget.student.className = text,
                                                 title: 'Class name',
+                                                initialValue: widget.student.className,
                                         ),
                                         DateFormField(
                                                 icon: Icon(Icons.calendar_today),
                                                 title: 'birth day',
-                                                date: student.dateOfBirth,
+                                                date: widget.student.dateOfBirth,
                                                 onSet: (newDate){
                                                     setState(() {
-                                                        student.dateOfBirth = newDate;
+                                                        widget.student.dateOfBirth = newDate;
                                                     });
                                                 }
                                         ),
                                         GenderFormField(
                                                 icon: Icon(MdiIcons.genderMaleFemale,),
                                                 genderList: ['male','female'],
-                                                genderSelection: student.gender == 'male' ? 0 : 1,
+                                                genderSelection: widget.student.gender == 'male' ? 0 : 1,
                                                 onSet: (String newSelection){
                                                     setState(() {
-                                                        student.gender = newSelection;
+                                                        widget.student.gender = newSelection;
                                                     });
                                                 },
                                         ),
                                         MultiLineTextFormField(
                                                 title: 'other infomation',
+                                                onChanged: (text) {
+                                                    widget.student.otherInfo = text;
+                                                },
+                                                initialValue: widget.student.otherInfo,
+
+
                                         ),
                                         ],
                                         ),
@@ -111,7 +125,8 @@ class SinglelineTextFormField extends StatelessWidget{
     final String hintText;
     final Function onChange;
     final String title;
-    SinglelineTextFormField({this.icon, this.hintText, this.onChange, this.title});
+    final String initialValue;
+    SinglelineTextFormField({this.icon, this.hintText, this.onChange, this.title, this.initialValue});
 
     @override
     Widget build(BuildContext context){
@@ -124,6 +139,7 @@ class SinglelineTextFormField extends StatelessWidget{
                             }
                             return null;
                         },
+                        initialValue: initialValue,
                         onChanged: (text) => onChange(text),
                         decoration: InputDecoration(
                                             hintText: this.hintText,
@@ -205,8 +221,10 @@ class GenderFormField extends StatelessWidget{
 class MultiLineTextFormField extends StatelessWidget{
 
     final String title;
+    final String initialValue;
+    final Function onChanged;
 
-    MultiLineTextFormField({this.title});
+    MultiLineTextFormField({this.title, this.initialValue, this.onChanged});
 
     @override
     Widget build(BuildContext context){
@@ -220,6 +238,8 @@ class MultiLineTextFormField extends StatelessWidget{
                                 )
 
                         ),
+                        initialValue: initialValue,
+                        onChanged: onChanged,
                         maxLines: null,
                         maxLength: 200,
                 ),
