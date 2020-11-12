@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sqflite/sqflite.dart';
 import 'package:student_management/database/database_provider.dart';
 import 'package:student_management/models/student.dart';
 import 'package:student_management/helper/helper.dart';
@@ -10,7 +11,7 @@ class StudentDAO {
     //Create new student
     Future<int> create(Student student) async {
         final db = await dbProvider.database;
-        var result = db.insert(STUDENT_TABLE, Helper().studentToDatabaseRecord(student));
+        var result = db.insert(STUDENT_TABLE, Helper().studentToDatabaseRecord(student),conflictAlgorithm: ConflictAlgorithm.replace);
         return result;
     }
 

@@ -15,17 +15,19 @@ class HomePage extends StatelessWidget {
         final streamBuild = StreamBuilder(
                 stream: bloc.students,
                 builder: (BuildContext context, AsyncSnapshot<List<Student>> snapshot) {
-                    print(snapshot);
                     if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                     }
 
+                    final List<Student> students = snapshot.data ;
                     return ListView.builder(
-                            itemCount: snapshot.data.length,
+                            itemCount: students.length,
                             itemBuilder: (context, index) {
+
+
                                 return ListTile(
-                                        title: Text("title $index"),
-                                        subtitle: Text('subtitle $index'),
+                                        title: Text(students[index].firstName + students[index].lastName),
+                                        subtitle: Text(students[index].className),
                                 );
                             },
                     );
@@ -37,11 +39,14 @@ class HomePage extends StatelessWidget {
                 floatingActionButton: FloatingActionButton(
 
                         child: Icon(Icons.add),
-                        onPressed: (){
-                            Navigator.push(
+                        onPressed: ()async{
+                            final newStudent = await Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => EditFormScreen()),
+                                    MaterialPageRoute(builder: (context) => EditForm()),
                             );
+
+                            bloc.addStudent(newStudent);
+
                         },
                 ),
         );

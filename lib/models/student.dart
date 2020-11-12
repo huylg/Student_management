@@ -6,8 +6,6 @@ class Student {
      String className;
      String otherInfo;
 
-
-
      int id;
      bool isDisable;
 
@@ -21,6 +19,11 @@ class Student {
        this.isDisable = isDisable;
        this.id = id;
     }
+
+    static Student studentDefault(){
+        return Student('','','2000-01-01','male','','',null,false);
+    }
+
 
     
 }

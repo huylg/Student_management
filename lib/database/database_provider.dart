@@ -23,17 +23,33 @@ class DatabaseProvider {
 
         String path = join(documentsDirectory.path,'student_management.db');
 
-        var database = await openDatabase(path, version: 1, onCreate: (Database database, int version) async{
+        var database = await openDatabase(path, version: 3, onCreate: (Database database, int version) async{
             await database.execute("CREATE TABLE students ("
-                    "id INTEGER PRIMARY KEY,"
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     "first_name TEXT NOT NULL,"
-                    " last_name TEXT NOT NULL,"
+                    "last_name TEXT NOT NULL,"
                     "date_of_birth TEXT NOT NULL,"
                     "gender TEXT NOT NULL,"
                     "class_name TEXT NOT NULL,"
                     "other_info TEXT NOT NULL,"
                     "is_disable INT NOT NULL"
-                    ");");}, onUpgrade: null);
+                    ");");}, onUpgrade: (database,olderVersion,newVersion)async{
+
+                await database.execute(" Drop TABLE IF EXISTS students ");
+
+                await database.execute("CREATE TABLE students ("
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        "first_name TEXT NOT NULL,"
+                        "last_name TEXT NOT NULL,"
+                        "date_of_birth TEXT NOT NULL,"
+                        "gender TEXT NOT NULL,"
+                        "class_name TEXT NOT NULL,"
+                        "other_info TEXT NOT NULL,"
+                        "is_disable INT NOT NULL"
+                        ");");
+
+
+            } ,);
 
         return database;
     }

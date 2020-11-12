@@ -11,7 +11,7 @@ class Helper{
             'class_name': student.className,
             'other_info': student.otherInfo,
             'id': student.id,
-            'is_disable': student.isDisable,
+            'is_disable': student.isDisable ? 1 : 0,
         };
     }
 

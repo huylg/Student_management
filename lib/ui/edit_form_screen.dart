@@ -1,47 +1,88 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:gender_picker/source/enums.dart';
-import 'package:gender_picker/source/gender_picker.dart';
-class EditFormScreen extends StatelessWidget{
+import 'package:flutter_picker/flutter_picker.dart';
+import 'package:student_management/models/student.dart';
+
+class EditForm extends StatefulWidget{
+    @override
+    _EditFormState createState() => _EditFormState();
+}
+class _EditFormState extends State<EditForm>{
+    final _formKey = GlobalKey<FormState>();
+    final student = Student.studentDefault();
+
+    @override
+    void initState() {
+        // TODO: implement initState
+        super.initState();
+      }
 
     @override
     Widget build(BuildContext context){
+        return Form(
+                key: _formKey,
+                child: Scaffold(
 
-        return Scaffold(
+                        appBar: AppBar(title: Text('Form'),actions: [FlatButton(
+                                        onPressed: (){
+                                            if(_formKey.currentState.validate()){
+                                                Navigator.pop(context, student);
+                                            }
+                                        },
+                                        textColor: Colors.white,
+                                        child: Text('save'),
+                        )],),
+                        body: SingleChildScrollView( child: Column(
+                                        children: [
+                                            //AvatarFormField(),
+                                        SinglelineTextFormField(
+                                                icon: Icon(Icons.person),
+                                                hintText: 'first name',
+                                                onChange: (text) => student.firstName = text,
+                                                title: 'First Name',
+                                        ),
+                                        SinglelineTextFormField(
+                                                icon: Icon(Icons.person),
+                                                hintText: 'last name',
+                                                onChange: (text) => student.lastName = text,
+                                                title: 'Last name',
+                                        ),
+                                        SinglelineTextFormField(
 
-                appBar: AppBar(title: Text('Form'),actions: [FlatButton(
-                                onPressed: (){
-
-                                },
-                                textColor: Colors.white,
-                                child: Text('save'),
-                )],),
-                body: SingleChildScrollView( child: Column(
-                                children: [
-                                    AvatarFormField(),
-                                    SinglelineTextFormField(
-                                            icon: Icon(Icons.person),
-                                            hintText: 'first name',
-                                    ),
-                                    SinglelineTextFormField(
-                                            icon: Icon(Icons.person),
-                                            hintText: 'last name',
-                                    ),
-                                    DateFormField(
-                                            icon: Icon(Icons.calendar_today),
-                                            title: 'birth day',
-                                    ),
-                                    GenderFormField(
-                                            icon: Icon(MdiIcons.genderMaleFemale,),
-                                            title: 'gender',
-                                    ),
-                                    MultiLineTextFormField(
-                                            title: 'other infomation',
-                                    ),
-
-                                    ],
-                                    )),
-                                    );
+                                                icon: Icon(Icons.class_),
+                                                hintText: 'class',
+                                                onChange: (text) => student.className = text,
+                                                title: 'Class name',
+                                        ),
+                                        DateFormField(
+                                                icon: Icon(Icons.calendar_today),
+                                                title: 'birth day',
+                                                date: student.dateOfBirth,
+                                                onSet: (newDate){
+                                                    setState(() {
+                                                        student.dateOfBirth = newDate;
+                                                    });
+                                                }
+                                        ),
+                                        GenderFormField(
+                                                icon: Icon(MdiIcons.genderMaleFemale,),
+                                                genderList: ['male','female'],
+                                                genderSelection: student.gender == 'male' ? 0 : 1,
+                                                onSet: (String newSelection){
+                                                    setState(() {
+                                                        student.gender = newSelection;
+                                                    });
+                                                },
+                                        ),
+                                        MultiLineTextFormField(
+                                                title: 'other infomation',
+                                        ),
+                                        ],
+                                        ),
+                                        ),
+                                        ),
+                                        );
     }
 
 }
@@ -68,17 +109,25 @@ class SinglelineTextFormField extends StatelessWidget{
 
     final Icon icon;
     final String hintText;
-
-    SinglelineTextFormField({this.icon, this.hintText});
+    final Function onChange;
+    final String title;
+    SinglelineTextFormField({this.icon, this.hintText, this.onChange, this.title});
 
     @override
     Widget build(BuildContext context){
         return ListTile(
                 leading: icon,
                 title: TextFormField(
+                        validator: (value){
+                            if(value.isEmpty){
+                                return "$title field can't be empty";
+                            }
+                            return null;
+                        },
+                        onChanged: (text) => onChange(text),
                         decoration: InputDecoration(
-                                hintText: this.hintText,
-                        ),
+                                            hintText: this.hintText,
+                                    ),
                 ),
         );
     }
@@ -89,79 +138,69 @@ class DateFormField extends StatelessWidget{
 
     final Icon icon;
     final String title;
-
-    DateFormField({this.icon, this.title});
+    final String date;
+    final Function onSet;
+    DateFormField({this.icon, this.title, this.date, this.onSet});
 
     @override
     Widget build(BuildContext context){
         return GestureDetector(
                 child: ListTile(
-                        leading: this.icon,
-                        title: Text(this.title),
-                        subtitle: Text('01/01/2000'),
+                        leading: icon,
+                        title: Text(title),
+                        subtitle: Text(date),
                 ),
 
                 onTap: () async {
                     final DateTime picked = await showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
+                            initialDate: DateTime.parse(date),
                             firstDate: DateTime(1990),
                             lastDate: DateTime(2025),
                     );
 
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    final String formatted = formatter.format(picked);
+                    this.onSet(formatted);
+
                 },
         );
-
     }
 }
+
 
 class GenderFormField extends StatelessWidget{
 
     final Icon icon;
-    final String title;
+    final List<String> genderList;
+    final int genderSelection;
+    final Function onSet;
 
-    GenderFormField({this.icon, this.title});
+    GenderFormField({this.icon, this.genderList, this.genderSelection, this.onSet});
+
 
     @override
     Widget build(BuildContext context){
-
         return GestureDetector(
                 onTap: (){
-                    
-            Navigator.push(context,
-                    child: Mater GenderPickerWithImage(
-              showOtherGender: true,
-              verticalAlignedText: false,
-              selectedGender: Gender.Male,
-              selectedGenderTextStyle: TextStyle(
-                  color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
-              unSelectedGenderTextStyle: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.normal),
-              onChanged: (Gender gender) {
-                print(gender);
-              },
-              equallyAligned: true,
-              animationDuration: Duration(milliseconds: 300),
-              isCircular: true,
-              // default : true,
-              opacityOfGradient: 0.4,
-              padding: const EdgeInsets.all(3),
-              size: 50, //default : 40
-            ));
-
-
+                    new Picker(
+                            adapter: PickerDataAdapter<String>(pickerdata: genderList),
+                            hideHeader: true,
+                            title: new Text("Please Select"),
+                            onConfirm: (Picker picker, List value) {
+                                onSet(this.genderList[value[0]]);
+                            }
+                    ).showDialog(context);
                 },
                 child: ListTile(
-                               leading: this.icon,
-                               title: Text(this.title),
-                               subtitle: Text('male'),
+                               leading: icon,
+                               title: Text('gender'),
+                               subtitle: Text(genderList[genderSelection]),
                        )
         );
-
     }
-
-
 }
+
 
 class MultiLineTextFormField extends StatelessWidget{
 
@@ -169,11 +208,9 @@ class MultiLineTextFormField extends StatelessWidget{
 
     MultiLineTextFormField({this.title});
 
-
     @override
     Widget build(BuildContext context){
         return ListTile(
-
                 title: Text(title),
                 subtitle: TextFormField(
                         decoration: InputDecoration(
@@ -188,6 +225,4 @@ class MultiLineTextFormField extends StatelessWidget{
                 ),
         );
     }
-
-
 }
