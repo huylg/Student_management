@@ -12,6 +12,7 @@ class Helper{
             'other_info': student.otherInfo,
             'id': student.id,
             'is_disable': student.isDisable ? 1 : 0,
+			'avatar_path': student.avatarPath,
         };
     }
 
@@ -24,12 +25,12 @@ class Helper{
         final otherInfo = record['other_info'] as String;
         final id = record['id'] as int;
         final isDisable = (record['is_disable'] as int) != 0;
-
-        return Student(firstName, lastName, dateOfBirth, gender, className, otherInfo, id, isDisable);
+		final avatarPath = record['avatar_path'] as String; 
+        return Student(firstName, lastName, dateOfBirth, gender, className, otherInfo, id, isDisable, avatarPath);
     }
 
     static List<String> columns(){
-        return ['first_name','last_name','date_of_birth','gender','class_name','other_info','id','is_disable'];
+        return ['first_name','last_name','date_of_birth','gender','class_name','other_info','id','is_disable', 'avatar_path'];
     }
 
 }

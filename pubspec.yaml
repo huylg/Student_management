@@ -32,11 +32,12 @@ dependencies:
   path_provider: ^1.6.24
   material_design_icons_flutter: ^4.0.5755
   flutter_picker: ^1.1.5
+  image_picker: ^0.6.7+14
+  permission_handler: ^5.0.1+1
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
-
+    sdk: flutter 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -49,8 +50,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+     - images/Profile_avatar_placeholder_large.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

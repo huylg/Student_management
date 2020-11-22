@@ -1,4 +1,3 @@
-
 class Student {
      String firstName;
      String lastName;
@@ -6,11 +5,12 @@ class Student {
      String gender;
      String className;
      String otherInfo;
+	 String avatarPath;
 
      int id;
      bool isDisable;
 
-    Student(String firstName, String lastName, String dateOfBirth, String gender, String className,String otherInfo,int id,bool isDisable){
+    Student(String firstName, String lastName, String dateOfBirth, String gender, String className,String otherInfo,int id,bool isDisable, String avatarPath){
        this.firstName = firstName; 
        this.lastName = lastName;
        this.dateOfBirth = dateOfBirth;
@@ -19,10 +19,11 @@ class Student {
        this.otherInfo = otherInfo;
        this.isDisable = isDisable;
        this.id = id;
+	   this.avatarPath = avatarPath;
     }
 
     static Student studentDefault(){
-        return Student('','','2000-01-01','male','','',null,false);
+        return Student('','','2000-01-01','male','','',null,false,'');
     }
     
     Student clone(){
@@ -35,6 +36,7 @@ class Student {
                 this.otherInfo,
                 this.id,
                 this.isDisable,
+				this.avatarPath,
         );
     }
 
